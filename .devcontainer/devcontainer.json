@@ -36,7 +36,7 @@
     "postCreateCommand": "cd infra && npm install -g pnpm@8 -y && pnpm install",
     "mounts": [
         "source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/node/.aws,type=bind",
-        "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/root/.ssh,type=bind"
+        "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind"
     ]
   }
   
