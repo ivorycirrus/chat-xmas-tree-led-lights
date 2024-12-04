@@ -1,0 +1,13 @@
+# os cache
+.DS_Store
+
+# python cache
+.ipynb_checkpoints/
+*.bkp
+**/__pycache__/
+
+# vscode
+.vscode/
+
+# pnpm
+/.pnpm-store
