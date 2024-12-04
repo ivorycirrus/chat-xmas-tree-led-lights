@@ -1,14 +1,51 @@
-# Welcome to your CDK TypeScript project
+# Setup infra on AWS
 
-This is a blank project for CDK development with TypeScript.
+## 1 Pre-requirements
+* node.js : 20.x or higher
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## 2. Quick Install
+Project deployments are tested on Linux/MacOS environments.
 
-## Useful commands
+### 2.1 Project Config
+Edit config files in ```infra/config```
+* config.json
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+### 2.2 AWS Account
+Create IAM user os SSO user with IAM Identity Center.
+* (option 1) If you already configured ```aws profile```
+```
+export AWS_PROFILE=<your-profile-name> 
+```
+* (option 2) With secret key and secret access key
+```
+export AWS_ACCESS_KEY_ID=<your-access-key>
+export AWS_SECRET_ACCESS_KEY=<your-secret-access-key>
+export AWS_DEFAULT_REGION=ap-northeast-2
+```
+
+### 2.3 Tool install
+* Install AWS CDK with tools
+```
+npm install -g aws-cdk pnpm
+```
+
+### 2.4 Project dependency install
+```
+pnpm install
+```
+
+### 2.5 (optional) CDK Bootstrap
+If you have not been deployed AWS CDK application in the AWS accout, you have to bootstrap CDK Toolkit.
+```
+cdk bootstrap
+```
+
+### 2.6 Deploy infrastructure
+```
+cdk deploy --all --require-approval never
+```
+
+## 3 Clean up
+```
+cdk destroy --all
+```
