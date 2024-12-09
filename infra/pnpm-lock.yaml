@@ -8,6 +8,9 @@ dependencies:
   aws-cdk-lib:
     specifier: 2.101.0
     version: 2.101.0(constructs@10.4.2)
+  cdk-iot-core-certificates-v3:
+    specifier: 0.0.11
+    version: 0.0.11(aws-cdk-lib@2.101.0)(constructs@10.4.2)
   constructs:
     specifier: ^10.0.0
     version: 10.4.2
@@ -990,6 +993,21 @@ packages:
   /caniuse-lite@1.0.30001686:
     resolution: {integrity: sha512-Y7deg0Aergpa24M3qLC5xjNklnKnhsmSyR/V89dLZ1n0ucJIFNs7PgR2Yfa/Zf6W79SbBicgtGxZr2juHkEUIA==}
     dev: true
+
+  /cdk-iot-core-certificates-v3@0.0.11(aws-cdk-lib@2.101.0)(constructs@10.4.2):
+    resolution: {integrity: sha512-77jNlKHBF0H9ZE+CKQ8OYXQ/1G6hDaXUfPttfl9orSwHoXb0kFy5AVe6YjBxRTO8nx3H/q/C18LJC/D4yPSbxQ==}
+    peerDependencies:
+      aws-cdk-lib: ^2.100.0
+      constructs: ^10.0.5
+    dependencies:
+      aws-cdk-lib: 2.101.0(constructs@10.4.2)
+      constructs: 10.4.2
+    dev: false
+    bundledDependencies:
+      - '@aws-sdk/client-iot'
+      - '@smithy/smithy-client'
+      - '@types/aws-lambda'
+      - aws-lambda
 
   /chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}

@@ -1,3 +1,8 @@
 {
-    "Namespace": "proto"
+    "Namespace": "proto",
+    "Env": {
+        "account":"837188027036",
+        "region":"us-east-1"
+    },
+    "IotThingName": "ledtree"
 }

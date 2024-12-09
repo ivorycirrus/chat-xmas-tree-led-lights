@@ -11,3 +11,7 @@
 
 # pnpm
 /.pnpm-store
+
+# secret files
+scripts/iot_certs
+iot_thing/**/secrets.h
