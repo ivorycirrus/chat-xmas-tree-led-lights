@@ -5,7 +5,6 @@ SECRETS_HEADER_FILE="../iot_thing/aws_iot.ino/secrets.h"
 echo "Create IoT Thing Certs : $SECRETS_HEADER_FILE
 
 # Config
-PROFILE="pmkang"
 CONFIG_FILE="../infra/config/config.json"
 EXPORT_CERTS="./iot_certs"
 
@@ -13,7 +12,7 @@ EXPORT_CERTS="./iot_certs"
 TIME_ZONE="+9"
 WIFI_SSID="WIFI_SSID"
 WIFI_PASSWORD="WIFI_PASSWORD"
-MQTT_HOST=$(aws iot describe-endpoint --profile $PROFILE --endpoint-type iot:Data-ATS | jq -r ".endpointAddress" -)
+MQTT_HOST=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS | jq -r ".endpointAddress" -)
 
 # parse env. variables
 NAMESPACE=$(jq -r ".Namespace" $CONFIG_FILE)

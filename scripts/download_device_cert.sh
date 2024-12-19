@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # Config
-PROFILE="pmkang"
 CONFIG_FILE="../infra/config/config.json"
 EXPORT_CERTS="./iot_certs"
 
@@ -25,8 +24,8 @@ curl -o AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.p
 
 # 2. Download iot device certs
 echo "2. Download iot device certs"
-aws s3 cp --profile $PROFILE s3://$CERT_BUCKET/$IOT_THING/$IOT_THING.cert.pem cert.pem
-aws s3 cp --profile $PROFILE s3://$CERT_BUCKET/$IOT_THING/$IOT_THING.private.key private.key
+aws s3 cp s3://$CERT_BUCKET/$IOT_THING/$IOT_THING.cert.pem cert.pem
+aws s3 cp s3://$CERT_BUCKET/$IOT_THING/$IOT_THING.private.key private.key
 
 # Done
 ls -al
