@@ -1,40 +1,53 @@
+// esp8266 connectivity 
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
+
+// for AWS IoT core
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <time.h>
+
+// for WS2812B LED strib
+#include <Adafruit_NeoPixel.h>
+
+// configurations
 #include "secrets.h"
 #define TIME_ZONE +9
- 
-float h ;
-float t;
+
+// system clock
 unsigned long lastMillis = 0;
 unsigned long previousMillis = 0;
 const long interval = 5000;
- 
-#define AWS_IOT_PUBLISH_TOPIC   "/esp8266/pub"
-#define AWS_IOT_SUBSCRIBE_TOPIC "/esp8266/sub"
- 
-WiFiClientSecure net;
- 
-BearSSL::X509List cert(cacert);
-BearSSL::X509List client_crt(client_cert);
-BearSSL::PrivateKey key(privkey);
- 
-PubSubClient client(net);
- 
 time_t now;
 time_t nowish = 1510592825;
 
+// AWS IoT Core - MQTT topics 
+#define AWS_IOT_PUBLISH_TOPIC   "/esp8266/pub" // to AWS
+#define AWS_IOT_SUBSCRIBE_TOPIC "/esp8266/sub" // from AWS
+ 
+WiFiClientSecure net;
+BearSSL::X509List cert(cacert);
+BearSSL::X509List client_crt(client_cert);
+BearSSL::PrivateKey key(privkey);
+PubSubClient client(net);
+
+// LED command store 
 int** cmd;
 int cmd_len = 0;
 int** cmd_candidate;
 int cmd_candidate_len = 0;
 bool cmd_invalidate = true;
 
+// Command definition
 const int CMD_SET = 1;
 const int CMD_SLEEP = 2;
 const int CMD_REPEAT = 3;
+
+// LED setup
+#define PIN D6 // DI pin number
+#define N_LEDS 30 // Nexpixel LED count
+#define BRIGHTNESS 50
+Adafruit_NeoPixel WS2812B = Adafruit_NeoPixel(N_LEDS, PIN, NEO_GRB + NEO_KHZ800); 
 
 //--------------------------------------
 // Datetime initialize
@@ -65,8 +78,9 @@ void messageReceived(char *topic, byte *payload, unsigned int length)
   Serial.print("Received [");
   Serial.print(topic);
   Serial.println("]: ");
+  Serial.println(length);
 
-  DynamicJsonDocument doc(4096);
+  DynamicJsonDocument doc(8192);
   DeserializationError error = deserializeJson(doc, payload, length);
 
   JsonArray dataArray = doc["data"];
@@ -150,9 +164,9 @@ void connectAWS()
   net.setTrustAnchors(&cert);
   net.setClientRSACert(&client_crt, &key);
  
+  client.setBufferSize(4096);
   client.setServer(MQTT_HOST, 8883);
   client.setCallback(messageReceived);
- 
  
   Serial.println("Connecting to AWS IOT");
  
@@ -170,6 +184,7 @@ void connectAWS()
   client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC);
  
   Serial.println("AWS IoT Connected!");
+  publishMessage("LED device connected");
 }
 
 //--------------------------------------
@@ -178,9 +193,9 @@ void connectAWS()
 void resetCommand() {
   cmd_len = 0;
   cmd_candidate_len = 0;
-  cmd = new int*[100];
-  cmd_candidate = new int*[100];
-  for(int i = 0; i < 100; i++) {
+  cmd = new int*[50];
+  cmd_candidate = new int*[50];
+  for(int i = 0; i < 50; i++) {
     cmd[i] = new int[6];
     cmd_candidate[i] = new int[6];
     for(int j = 0; j < 6; j++) {
@@ -206,6 +221,34 @@ void updateCommand() {
   Serial.print("Update command - done(");
   Serial.print(cmd_len);
   Serial.println(")");
+  publishMessage("Command updated");
+}
+
+//--------------------------------------
+// LED functions
+//--------------------------------------
+void initLEDs() {
+  WS2812B.begin(); // INITIALIZE WS2812B strip object (REQUIRED)
+  WS2812B.setBrightness(BRIGHTNESS);  // brightness setup(RGBW only)
+  WS2812B.clear(); 
+  WS2812B.show();
+}
+
+void setLEDs(int from, int to, int red, int green, int blue) {
+  Serial.print(" set ");
+  Serial.print("  from: ");
+  Serial.print(from);
+  Serial.print(" - to: ");
+  Serial.print(to);
+  Serial.print("  - RGB: ");
+  Serial.print(red);
+  Serial.print(", ");
+  Serial.print(green);
+  Serial.print(", ");
+  Serial.println(blue);
+  for(int i = from ; i <= to ; i++) {
+    WS2812B.setPixelColor(i, WS2812B.Color(red, green, blue)); 
+  }
 }
  
 //--------------------------------------
@@ -216,6 +259,7 @@ void setup()
   Serial.begin(115200);
   resetCommand();
   connectAWS();
+  initLEDs();
 }
  
 void loop()
@@ -245,22 +289,16 @@ void loop()
       Serial.print("] > ");
       delay(1000);
 
-      if(cmd[seq][0] == CMD_SET) {
-        Serial.print(" set ");
-        Serial.print("  from: ");
-        Serial.print(cmd[seq][1]);
-        Serial.print(" - to: ");
-        Serial.print(cmd[seq][2]);
-        Serial.print("  - RGB: ");
-        Serial.print(cmd[seq][3]);
-        Serial.print(", ");
-        Serial.print(cmd[seq][4]);
-        Serial.print(", ");
-        Serial.println(cmd[seq][5]);
-        // TO-DO : implement set command
+      if(cmd[seq][0] == CMD_SET) {        
+        // set led
+        setLEDs(cmd[seq][1], cmd[seq][2], cmd[seq][3], cmd[seq][4], cmd[seq][5]);
       } else if(cmd[seq][0] == CMD_SLEEP) {
         Serial.print(" sleep ");
         Serial.println(cmd[seq][1]);
+
+        // show
+        WS2812B.show(); 
+        // sleep
         delay(cmd[seq][1]);
 
         // ckeck new message after sleep
@@ -284,7 +322,7 @@ void loop()
     }
 
     // Health check
-    if (millis() - lastMillis > 30000)
+    if (millis() - lastMillis > 60000)
     {
       lastMillis = millis();
       publishMessage("Health check");
