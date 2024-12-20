@@ -2,7 +2,7 @@
 
 # Taeget file
 SECRETS_HEADER_FILE="../iot_thing/aws_iot.ino/secrets.h"
-echo "Create IoT Thing Certs : $SECRETS_HEADER_FILE
+echo "Create IoT Thing Certs : "$SECRETS_HEADER_FILE
 
 # Config
 CONFIG_FILE="../infra/config/config.json"

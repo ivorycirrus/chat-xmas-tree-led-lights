@@ -12,7 +12,6 @@
 
 // configurations
 #include "secrets.h"
-#define TIME_ZONE +9
 
 // system clock
 unsigned long lastMillis = 0;
@@ -83,7 +82,7 @@ void messageReceived(char *topic, byte *payload, unsigned int length)
   DynamicJsonDocument doc(8192);
   DeserializationError error = deserializeJson(doc, payload, length);
 
-  JsonArray dataArray = doc["data"];
+  JsonArray dataArray = doc["commands"];
 
   int i = 0;
   for (JsonObject obj : dataArray) {

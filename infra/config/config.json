@@ -1,8 +1,10 @@
 {
-    "Namespace": "proto",
+    "Namespace": "dev",
     "Env": {
         "account":"837188027036",
         "region":"us-east-1"
     },
-    "IotThingName": "ledtree"
+    "BedrockModelId": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "IotThingName": "ledlights",
+    "IoTCommandTopic": "/esp8266/sub"
 }
