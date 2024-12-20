@@ -1,9 +1,13 @@
 # Christmas Tree Demo
 Here are few Christmas tree demos
 
+
 ## 1. Chrismas 
 * I want to joyful Christmas party with SantaClaus.
+
+
 ![santa](santa.jpg)
+
 ```json
 {
   "commands": [
@@ -34,7 +38,10 @@ Here are few Christmas tree demos
 
 ## 2. Aurora
 * Create a mystical tree at night with rainbow-colored eyes falling like snowflakes around it, creating an aurora-like glow in the darkness.
+
+
 ![aurora](aurora.jpg)
+
 ```json
 {
   "commands": [
@@ -67,7 +74,10 @@ Here are few Christmas tree demos
 
 ## 3. Iron Man
 * Describe the Iron man.
+
+
 ![ironman](ironman.jpg)
+
 ```json
 {
   "commands": [
