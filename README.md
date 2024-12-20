@@ -15,7 +15,6 @@ For more Demos, please see here: [Christmas Tree Demo](docs/demo.md)
 
 
 ## 2. Setup and Install
-This project tested on MacBook Pro(M1) and AWS us-east-1 region.
 Quick setup and install guide is here : [Install Guide](install.md)
 
 ## 3. Run Application
